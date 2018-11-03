@@ -30,6 +30,17 @@ struct AllUsersContext: Encodable {
     let users: [User]
 }
 
+struct AllCategoriesContext: Encodable {
+    let title = "All Categories"
+    let categories: Future<[Category]>
+}
+
+struct CategoryConext: Encodable {
+    let title: String
+    let category: Category
+    let acronyms: Future<[Acronym]>
+}
+
 struct WebsiteController: RouteCollection {
     
     func boot(router: Router) throws {
@@ -37,6 +48,8 @@ struct WebsiteController: RouteCollection {
         router.get("acronyms", Acronym.parameter, use: acronymHandler)
         router.get("users", User.parameter, use: userHandler)
         router.get("users", use: allUsersHandler)
+        router.get("categories", use: allCategoriesHandler)
+        router.get("category", Category.parameter, use: categoryHandler)
     }
     
     func indexHandler(_ req: Request) throws -> Future<View> {
@@ -74,6 +87,21 @@ struct WebsiteController: RouteCollection {
             .flatMap(to: View.self) { users in
                 let context = AllUsersContext(title: "All Users", users: users)
                 return try req.view().render("allUsers", context)
+        }
+    }
+    
+    func allCategoriesHandler(_ req: Request) throws -> Future<View> {
+        let categories = Category.query(on: req).all()
+        let context = AllCategoriesContext(categories: categories)
+        return try req.view().render("allCategories", context)
+    }
+    
+    func categoryHandler(_ req: Request) throws -> Future<View> {
+        return try req.parameters.next(Category.self)
+            .flatMap(to: View.self) { category in
+                let acronyms = try category.acronyms.query(on: req).all()
+                let context = CategoryConext(title: category.name, category: category, acronyms: acronyms)
+                return try req.view().render("category", context)
         }
     }
 }

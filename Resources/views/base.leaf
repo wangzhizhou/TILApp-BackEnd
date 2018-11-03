@@ -29,6 +29,9 @@
                     <li class="nav-item #if(title=="All Users"){active}">
                         <a href="/users" class="nav-link">All Users</a>
                     </li>
+                    <li class="nav-item #if(title=="All Categories"){active}">
+                        <a href="/categories" class="nav-link">All Categories</a>
+                    </li>
                 </ul>
             </div>
         </nav>
