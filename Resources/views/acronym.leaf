@@ -1,13 +1,8 @@
-<!DOCTYPE html>
+#set("content"){
+    <h1>#(acronym.short)</h1>
+    <h2>#(acronym.long)</h2>
+    <p>Created by <a href="/users/#(user.id)/">#(user.name)</a></p>
+    <a class="btn btn-primary" href="/acronyms/#(acronym.id)/edit" role="button">Edit</a>
+}
 
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>#(title) | Acronyms</title>
-    </head>
-    <body>
-        <h1>#(acronym.short)</h1>
-        <h2>#(acronym.long)</h2>
-        <p>Created by <a href="/users/#(user.id)/">#(user.name)</a></p>
-    </body>
-</html>
+#embed("base")
