@@ -66,6 +66,7 @@ struct WebsiteController: RouteCollection {
         router.post(Acronym.self, at: "acronyms", "create", use: createAcronymPostHandler)
         router.get("acronyms", Acronym.parameter, "edit", use: editAcronymHandler)
         router.post("acronyms", Acronym.parameter, "edit",  use: editAcronymPostHandler)
+        router.post("acronyms", Acronym.parameter, "delete", use: deleteAcronymHandler)
     }
     
     func indexHandler(_ req: Request) throws -> Future<View> {
@@ -161,5 +162,10 @@ struct WebsiteController: RouteCollection {
                 return req.redirect(to: "/acronyms/\(id)")
             }
         }
+    }
+    
+    func deleteAcronymHandler(_ req: Request) throws -> Future<Response> {
+        return try req.parameters.next(Acronym.self).delete(on: req)
+        .transform(to: req.redirect(to: "/"))
     }
 }
