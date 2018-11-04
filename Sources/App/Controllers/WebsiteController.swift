@@ -7,6 +7,7 @@
 
 import Vapor
 import Leaf
+import Fluent
 
 struct IndexContext: Encodable {
     let title: String
@@ -52,6 +53,7 @@ struct EditAcronymContext: Encodable {
     let acronym: Acronym
     let users: Future<[User]>
     let editing = true
+    let categories: Future<[Category]>
 }
 
 struct WebsiteController: RouteCollection {
@@ -154,7 +156,11 @@ struct WebsiteController: RouteCollection {
     func editAcronymHandler(_ req: Request) throws -> Future<View> {
         return try req.parameters.next(Acronym.self)
             .flatMap(to: View.self) { acronym in
-                let context = EditAcronymContext(acronym: acronym, users: User.query(on: req).all())
+                let users = User.query(on: req).all()
+                let categories = try acronym.categories.query(on: req).all()
+                let context = EditAcronymContext(acronym: acronym,
+                                                 users: users,
+                                                 categories: categories)
                 return try req.view().render("createAcronym", context)
         }
     }
@@ -163,17 +169,44 @@ struct WebsiteController: RouteCollection {
     func editAcronymPostHandler(_ req: Request) throws -> Future<Response> {
         return try flatMap(to: Response.self,
                            req.parameters.next(Acronym.self),
-                           req.content.decode(Acronym.self)
+                           req.content.decode(CreateAcronymData.self)
         ) { acronym, data in
             acronym.short = data.short
             acronym.long = data.long
             acronym.userID = data.userID
             
-            return acronym.save(on: req).map(to: Response.self) { savedAcronym in
+            return acronym.save(on: req).flatMap(to: Response.self) { savedAcronym in
                 guard let id = savedAcronym.id else {
                     throw Abort(HTTPResponseStatus.internalServerError)
                 }
-                return req.redirect(to: "/acronyms/\(id)")
+                
+                return try acronym.categories.query(on: req).all()
+                    .flatMap(to: Response.self) { existingCategories in
+                        let existingStringArry = existingCategories.map { $0.name }
+                        
+                        let existingSet = Set<String>(existingStringArry)
+                        let newSet = Set<String>(data.categories ?? [])
+                        
+                        let categoriesToAdd = newSet.subtracting(existingSet)
+                        let categoriesToRemove = existingSet.subtracting(newSet)
+                        
+                        var categoryResults: [Future<Void>] = []
+                        
+                        for newCategory in categoriesToAdd {
+                            categoryResults.append(try Category.addCategory(newCategory, to: acronym, on: req))
+                        }
+                        
+                        for categoryNameToRemove in categoriesToRemove {
+                            let categoryToRemove = existingCategories.first {
+                                $0.name == categoryNameToRemove
+                            }
+                            if let category = categoryToRemove {
+                                categoryResults.append(acronym.categories.detach(category, on: req))
+                            }
+                        }
+                        return categoryResults.flatten(on: req)
+                        .transform(to: req.redirect(to: "/acronyms/\(id)"))
+                }
             }
         }
     }
