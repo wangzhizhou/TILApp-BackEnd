@@ -19,6 +19,11 @@
                 }
             </select>
         </div>
+        <div class="form-group">
+            <label for="categories">Categories</label>
+            <select name="categories[]" class="form-control" id="categories" placeholder="Categories" multiple="multiple">
+            </select>
+        </div>
         <button type="submit" class = "btn btn-primary">
             #if(editing) { Update } else { Submit }
         </button>
