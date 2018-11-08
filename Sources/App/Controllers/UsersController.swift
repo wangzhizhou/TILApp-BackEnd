@@ -1,4 +1,5 @@
 import Vapor
+import Crypto
 
 struct UsersController: RouteCollection {
     func boot(router: Router) throws {
@@ -8,31 +9,31 @@ struct UsersController: RouteCollection {
         usersGroup.get(User.parameter, use: getHandler)
         usersGroup.put(User.parameter, use: updateHandler)
         usersGroup.delete(User.parameter, use: deleteHandler)
-        
         usersGroup.get(User.parameter, "acronyms", use: getAcronymsHandler)
         
     }
     
     
-    func createHandler(_ req: Request, user: User) throws -> Future<User> {
-        return user.save(on: req)
+    func createHandler(_ req: Request, user: User) throws -> Future<User.Public> {
+        user.password = try BCrypt.hash(user.password)
+        return user.save(on: req).convertToPublic()
     }
     
-    func getAllHandler(_ req: Request) throws -> Future<[User]> {
-        return User.query(on: req).all()
+    func getAllHandler(_ req: Request) throws -> Future<[User.Public]> {
+        return User.query(on: req).decode(data: User.Public.self).all()
     }
     
-    func getHandler(_ req: Request) throws -> Future<User> {
-        return try req.parameters.next(User.self)
+    func getHandler(_ req: Request) throws -> Future<User.Public> {
+        return try req.parameters.next(User.self).convertToPublic()
     }
     
-    func updateHandler(_ req: Request) throws -> Future<User> {
-        return try flatMap(to: User.self, req.parameters.next(User.self), req.content.decode(User.self)) { (user, updatedUser) -> Future<User> in
+    func updateHandler(_ req: Request) throws -> Future<User.Public> {
+        return try flatMap(to: User.Public.self, req.parameters.next(User.self), req.content.decode(User.self)) { (user, updatedUser) -> Future<User.Public> in
             
             user.name = updatedUser.name
             user.username = updatedUser.username
             
-            return user.save(on: req)
+            return user.save(on: req).convertToPublic()
         }
     }
     
