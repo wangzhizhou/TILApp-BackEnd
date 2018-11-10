@@ -4,15 +4,29 @@ import Crypto
 struct UsersController: RouteCollection {
     func boot(router: Router) throws {
         let usersGroup = router.grouped("api", "users")
-        usersGroup.post(User.self, use: createHandler)
+        
         usersGroup.get(use: getAllHandler)
         usersGroup.get(User.parameter, use: getHandler)
         usersGroup.put(User.parameter, use: updateHandler)
         usersGroup.delete(User.parameter, use: deleteHandler)
         usersGroup.get(User.parameter, "acronyms", use: getAcronymsHandler)
         
+        let basicAuthMiddleware = User.basicAuthMiddleware(using: BCryptDigest())
+        let basicAuthGroup = usersGroup.grouped(basicAuthMiddleware)
+        basicAuthGroup.post("login", use: login)
+        
+        
+        let tokenAuthMiddleware = User.tokenAuthMiddleware()
+        let guardAuthMiddleware = User.guardAuthMiddleware()
+        let tokenAuthGroup = usersGroup.grouped(tokenAuthMiddleware, guardAuthMiddleware)
+        tokenAuthGroup.post(User.self, use: createHandler)
+        
     }
-    
+    func login(_ req: Request) throws -> Future<Token> {
+        let user = try req.requireAuthenticated(User.self)
+        let token = try Token.generate(for: user)
+        return token.save(on: req)
+    }
     
     func createHandler(_ req: Request, user: User) throws -> Future<User.Public> {
         user.password = try BCrypt.hash(user.password)

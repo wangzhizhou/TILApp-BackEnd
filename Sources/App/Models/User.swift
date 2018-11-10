@@ -7,6 +7,7 @@
 
 import Vapor
 import FluentPostgreSQL
+import Authentication
 
 final class User: Codable {
     var id: UUID?
@@ -66,3 +67,30 @@ extension Future where T: User {
     }
 }
 
+
+extension User: BasicAuthenticatable {
+    static var usernameKey: WritableKeyPath<User, String> = \.username
+    static var passwordKey: WritableKeyPath<User, String> = \.password
+}
+
+extension User: TokenAuthenticatable {
+    typealias TokenType = Token
+}
+
+struct AdminUser: Migration {
+    typealias Database = PostgreSQLDatabase
+    
+    static func prepare(on conn: PostgreSQLConnection) -> Future<Void> {
+        let password = try? BCrypt.hash("password")
+        guard let hashPassword = password else {
+            fatalError("Failed Create Admin User!")
+        }
+        
+        let user = User(name: "admin", username: "admin", password: hashPassword)
+        return user.save(on: conn).transform(to: ())
+    }
+    
+    static func revert(on conn: PostgreSQLConnection) -> Future<Void> {
+        return .done(on: conn)
+    }
+}
