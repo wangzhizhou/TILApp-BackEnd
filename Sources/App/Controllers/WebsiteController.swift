@@ -8,6 +8,7 @@
 import Vapor
 import Leaf
 import Fluent
+import Authentication
 
 struct IndexContext: Encodable {
     let title: String
@@ -56,6 +57,28 @@ struct EditAcronymContext: Encodable {
     let categories: Future<[Category]>
 }
 
+struct CreateAcronymData: Content {
+    let userID: User.ID
+    let short: String
+    let long: String
+    let categories: [String]?
+}
+
+
+struct LoginContext: Encodable {
+    let title = "Log In"
+    let loginError: Bool
+    
+    init(loginError: Bool = false) {
+        self.loginError = loginError
+    }
+}
+
+struct LoginPostData: Content {
+    let username: String
+    let password: String
+}
+
 struct WebsiteController: RouteCollection {
     
     func boot(router: Router) throws {
@@ -70,6 +93,9 @@ struct WebsiteController: RouteCollection {
         router.get("acronyms", Acronym.parameter, "edit", use: editAcronymHandler)
         router.post("acronyms", Acronym.parameter, "edit",  use: editAcronymPostHandler)
         router.post("acronyms", Acronym.parameter, "delete", use: deleteAcronymHandler)
+        
+        router.get("login", use: loginHandler)
+        router.post(LoginPostData.self, at: "login", use: loginPostHandler)
     }
     
     func indexHandler(_ req: Request) throws -> Future<View> {
@@ -215,12 +241,29 @@ struct WebsiteController: RouteCollection {
         return try req.parameters.next(Acronym.self).delete(on: req)
         .transform(to: req.redirect(to: "/"))
     }
-}
-
-
-struct CreateAcronymData: Content {
-    let userID: User.ID
-    let short: String
-    let long: String
-    let categories: [String]?
+    
+    func loginHandler(_ req: Request) throws -> Future<View> {
+        let context: LoginContext
+        
+        if req.query[Bool.self, at: "error"] != nil {
+            context = LoginContext(loginError: true)
+        } else {
+            context = LoginContext()
+        }
+        
+        return try req.view().render("login", context)
+    }
+    
+    func loginPostHandler(_ req: Request, userData: LoginPostData) throws -> Future<Response> {
+        return User.authenticate(username: userData.username, password: userData.password, using: BCryptDigest(), on: req).map(to: Response.self) {
+            user in
+            
+            guard let user = user else {
+                return req.redirect(to: "/login?error")
+            }
+            
+            try req.authenticateSession(user)
+            return req.redirect(to: "/")
+        }
+    }
 }

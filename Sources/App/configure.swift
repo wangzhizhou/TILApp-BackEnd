@@ -19,6 +19,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     /// middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     middlewares.use(FileMiddleware.self) //
+    middlewares.use(SessionsMiddleware.self)
     services.register(middlewares)
 
 
@@ -70,4 +71,5 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     
     try services.register(LeafProvider())
     config.prefer(LeafRenderer.self, for: ViewRenderer.self)
+    config.prefer(MemoryKeyedCache.self, for: KeyedCache.self)
 }
