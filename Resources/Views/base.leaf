@@ -41,6 +41,12 @@
                         <a href="/acronyms/create" class="nav-link">Create An Acronym</a>
                     </li>
                 </ul>
+                #if(userLoggedIn) {
+                    <form class="form-inline" action="/logout" method="POST">
+                    <input class="nav-link btn btn-link" type="submit"
+                    value="Log out">
+                    </form>
+                }
             </div>
         </nav>
         <div class="container mt-3">
