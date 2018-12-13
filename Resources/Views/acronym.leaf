@@ -7,7 +7,7 @@
         <ul>
             #for(category in categories) {
             <li>
-                <a href="/category/#(category.id)">
+                <a href="/categories/#(category.id)">
                     #(category.name)
                 </a>
             </li>

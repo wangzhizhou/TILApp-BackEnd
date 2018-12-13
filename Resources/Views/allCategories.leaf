@@ -13,7 +13,7 @@
             #for(category in categories) {
                 <tr>
                     <td>
-                        <a href="/category/#(category.id)">
+                        <a href="/categories/#(category.id)">
                             #(category.name)
                         </a>
                     </td>
