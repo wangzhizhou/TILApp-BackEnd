@@ -10,10 +10,11 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent-postgresql.git", from: "1.0.0"),
         .package(url: "https://github.com/vapor/auth.git", from: "2.0.1"),
         // Leaf
-        .package(url: "https://github.com/vapor/leaf.git", from: "3.0.1")
+        .package(url: "https://github.com/vapor/leaf.git", from: "3.0.1"),
+        .package(url: "https://github.com/vapor-community/Imperial.git", from: "0.7.0")
     ],
     targets: [
-        .target(name: "App", dependencies: ["FluentPostgreSQL", "Authentication", "Vapor", "Leaf"]),
+        .target(name: "App", dependencies: ["FluentPostgreSQL", "Authentication", "Vapor", "Leaf", "Imperial"]),
         .target(name: "Run", dependencies: ["App"]),
         .testTarget(name: "AppTests", dependencies: ["App"])
     ]
