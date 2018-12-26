@@ -61,7 +61,14 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     migrations.add(model: Acronym.self, database: .psql)
     migrations.add(model: Category.self, database: .psql)
     migrations.add(model: AcronymCategoryPivot.self, database: .psql)
-    migrations.add(migration: AdminUser.self, database: .psql)
+    switch env {
+    case .development, .testing:
+        migrations.add(migration: AdminUser.self, database: .psql)
+    default:
+        break
+    }
+    migrations.add(migration: AddTwitterURLToUser.self, database: .psql)
+    migrations.add(migration: MakeCategoriesUnique.self, database: .psql)
     services.register(migrations)
 
     // 添加Fluent命令到CommandConfig中，可以使用字符串作为标识符执行"revert"命令和"migrate"命令

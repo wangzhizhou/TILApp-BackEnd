@@ -13,6 +13,10 @@
             id="name"/>
         </div>
         <div class="form-group">
+            <label for="twitterURL">Twitter handle</lable>
+            <input type="text" name="twitterURL" class="form-control" id="twitterURL" />
+        </div>
+        <div class="form-group">
             <label for="username">Username</label>
             <input type="text" name="username" class="form-control"
             id="username"/>
@@ -24,7 +28,7 @@
         </div>
         <div class="form-group">
             <label for="confirmPassword">Confirm Password</label>
-            <input type="pass word" name="confirmPassword"
+            <input type="password" name="confirmPassword"
             class="form-control" id="confirmPassword"/>
         </div>
         <button type="submit" class="btn btn-primary">
