@@ -73,12 +73,17 @@ struct AcronymsController: RouteCollection {
     }
     
     func firstHandler(_ req: Request) throws -> Future<Acronym> {
-        return Acronym.query(on: req).first().map(to: Acronym.self) { (acronym)  in
-            guard let acronym = acronym else {
-                throw Abort(.notFound)
-            }
-            return acronym
-        }
+        
+        // 使用unwrap可以简化下面的一坨逻辑
+        return Acronym.query(on: req).first().unwrap(or: Abort(.notFound))
+        
+//        // 不使用unwrap的逻辑实现
+//        return Acronym.query(on: req).first().map(to: Acronym.self) { (acronym)  in
+//            guard let acronym = acronym else {
+//                throw Abort(.notFound)
+//            }
+//            return acronym
+//        }
     }
     
     func sortedHandler(_ req: Request) throws -> Future<[Acronym]> {
