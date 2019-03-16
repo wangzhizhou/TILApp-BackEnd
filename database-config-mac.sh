@@ -65,7 +65,7 @@ main() {
     if [ $# -eq 0 ]
     then
         usage
-        exit 1
+        exit 0
     fi
 
     while getopts "iudr" opt
@@ -85,7 +85,7 @@ main() {
             ;;
         *)
             usage
-            exit 1
+            exit 0
             ;;
         esac
     done
