@@ -7,7 +7,7 @@ install_docker() {
 	open -a docker
 	if [ $? -eq 0 ];
 	then
-		echo 🤪Docker has been Launched
+		echo Docker has been Launched
 	fi
 }
 
@@ -65,7 +65,7 @@ main() {
     if [ $# -eq 0 ]
     then
         usage
-        exit 0
+        exit 1
     fi
 
     while getopts "iudr" opt
@@ -85,7 +85,7 @@ main() {
             ;;
         *)
             usage
-            exit 0
+            exit 1
             ;;
         esac
     done
