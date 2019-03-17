@@ -16,13 +16,24 @@ uninstall_docker() {
 }
 
 remove_database() {
+
 	echo remove database
-    POSTGRES=$(docker ps -a | grep postgres | cut -d ' ' -f 1)
+
+	POSTGRES=$(docker ps -a | grep postgres | cut -d ' ' -f 1)
+	POSTGRES_TEST=$(docker ps -a | grep postgres-test | cut -d ' ' -f 1)
+
 	if [ -n "$POSTGRES" ];
 	then
 		docker stop $POSTGRES
 		docker rm $POSTGRES
 		docker rmi postgres
+	fi
+
+	if [ -n "$POSTGRES_TEST" ];
+	then
+		docker stop $POSTGRES_TEST
+		docker rm $POSTGRES_TEST
+		dcoker rmi postgres
 	fi
 	echo removed!!!
 }
@@ -36,13 +47,26 @@ configure_database() {
 
 	echo Configuring Postgres Database...
 
-	docker run --name postgres -e POSTGRES_DB=vapor \
-		-e POSTGRES_USER=vapor -e POSTGRES_PASSWORD=password \
-		-p 5432:5432 -d postgres
+	docker run \
+		--name postgres \
+		-e POSTGRES_DB=vapor \
+		-e POSTGRES_USER=vapor \
+		-e POSTGRES_PASSWORD=password \
+		-p 5432:5432 \
+		-d postgres
+
+	docker run \
+		--name postgres-test \
+		-e POSTGRES_DB=vapor-test \
+		-e POSTGRES_USER=vapor \
+		-e POSTGRES_PASSWORD=password \
+		-p 5433:5432 \
+		-d postgres
 
 	if [ $? -eq 0 ];
 	then
 		docker ps -a | grep postgres
+		docker ps -a | grep postgres-test
 	fi
 
 	echo Database configure completed!
