@@ -17,6 +17,6 @@ public func routes(_ router: Router) throws {
     
     
     let imperialController = ImperialController()
-    try router.register(collection: imperialController)
+//    try router.register(collection: imperialController)
 }
 
