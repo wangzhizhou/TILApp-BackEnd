@@ -28,3 +28,8 @@ final class Acronym: Model {
     // 初始化一个空的数据模型，Fluent内部使用
     init() {}
 }
+
+import Vapor
+
+// 支持多种格式编解码, Content 是 Vapor 对 Codable 协议的包装
+extension Acronym: Content {}

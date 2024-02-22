@@ -32,28 +32,34 @@ final class AppTests: XCTestCase {
             XCTAssertEqual(res.body.string, "Hello, world!")
         })
 
-        try app.test(.GET, "hello/joker", afterResponse: { res in 
+        try app.test(.GET, "hello/joker", afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(res.body.string, "Hello, joker!")
         })
 
-        try await app.test(.POST, "info", beforeRequest: { req async throws in 
+        try await app.test(.POST, "info", beforeRequest: { req async throws in
             let body = InfoData(name: "vapor")
             try req.content.encode(body)
-        }, afterResponse: { res in 
+        }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(res.body.string, "Hello, vapor!")
         })
 
-        try await app.test(.POST, "info/json", beforeRequest: { req async throws in 
+        try await app.test(.POST, "info/json", beforeRequest: { req async throws in
             let body = InfoData(name: "vapor")
             try req.content.encode(body)
-        }, afterResponse: { res in 
+        }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(res.body.string, """
             {"request":{"name":"vapor"}}
             """)
-        })        
+        })
+
+        try await app.test(.POST, "api/acronyms", beforeRequest: { req async throws in
+            try req.content.encode(Acronym(short: "TIL", long: "Today I Learn"))
+        }, afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
+        })
 
     }
 }

@@ -37,7 +37,16 @@ func routes(_ app: Application) throws {
         return InfoResponse(request: data)
         
     }
-    
+
+    app.post("api", "acronyms") { req async throws -> Acronym in
+
+        let acronym = try req.content.decode(Acronym.self)
+
+        try await acronym.save(on: req.db)
+
+        return acronym
+    }
+
     // 注册路由集合，方便模块化维护
     try app.register(collection: TodoController())
 }
