@@ -46,6 +46,48 @@ func routes(_ app: Application) throws {
 
         return acronym
     }
+    
+    app.get("api", "acronyms") { req async throws -> [Acronym] in
+        
+        return try await Acronym.query(on: req.db).all()
+    }
+    
+    app.get("api", "acronyms", ":acronymID") { req async throws -> Acronym in
+        
+        guard let ret = try await Acronym.find(req.parameters.get("acronymID"), on: req.db)
+        else {
+            throw Abort(.notFound)
+        }
+        return ret
+    }
+    
+    app.put("api", "acronyms", ":acronymID") { req async throws -> Acronym in
+        
+        let updatedAcronym = try req.content.decode(Acronym.self)
+        
+        guard let acronym = try await Acronym.find(req.parameters.get("acronymID"), on: req.db)
+        else {
+            throw Abort(.notFound)
+        }
+        
+        acronym.long = updatedAcronym.long
+        acronym.short = updatedAcronym.short
+        
+        try await acronym.save(on: req.db)
+        
+        return acronym
+    }
+    
+    app.delete("api", "acronyms", ":acronymID") { req async throws -> HTTPStatus in
+        guard let acronym = try await Acronym.find(req.parameters.get("acronymID"), on: req.db)
+        else {
+            throw Abort(.notFound)
+        }
+        
+        try await acronym.delete(on: req.db)
+        
+        return .noContent
+    }
 
     // 注册路由集合，方便模块化维护
     try app.register(collection: TodoController())

@@ -60,6 +60,10 @@ final class AppTests: XCTestCase {
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
         })
+        
+        try app.test(.GET, "api/acronyms", afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
+        })
 
     }
 }
