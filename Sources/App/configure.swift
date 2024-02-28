@@ -11,11 +11,11 @@ public func configure(_ app: Application) async throws {
     app.logger.logLevel = .debug
     
     // 配置使用的数据库连接参数
-    // try configurePostgreSQL(app)
+    try configurePostgreSQL(app)
     // configureSQLite(app, configuration: .memory)
     // configureSQLite(app, configuration: .file("db.sqlite"))
     // configureMySQL(app)
-    try configureMongo(app)
+    // try configureMongo(app)
 
 
     // 关联数据模型和数据库表
