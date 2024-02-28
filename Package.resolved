@@ -19,12 +19,30 @@
       }
     },
     {
+      "identity" : "bson",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/orlandos-nl/BSON.git",
+      "state" : {
+        "revision" : "c29936981d39667429d4e0ec03aa8d6a722ea36a",
+        "version" : "7.0.31"
+      }
+    },
+    {
       "identity" : "console-kit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/console-kit.git",
       "state" : {
         "revision" : "a31f44ebfbd15a2cc0fda705279676773ac16355",
         "version" : "4.14.1"
+      }
+    },
+    {
+      "identity" : "dnsclient",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/orlandos-nl/DNSClient.git",
+      "state" : {
+        "revision" : "8a7b1be0208e6e9d1d9e0a07713e0c0ebd7a2010",
+        "version" : "2.3.0"
       }
     },
     {
@@ -46,12 +64,39 @@
       }
     },
     {
+      "identity" : "fluent-mongo-driver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/fluent-mongo-driver.git",
+      "state" : {
+        "revision" : "a4237b99720d2a728178bc9f4c4a0d11d309031e",
+        "version" : "1.3.1"
+      }
+    },
+    {
+      "identity" : "fluent-mysql-driver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/fluent-mysql-driver.git",
+      "state" : {
+        "revision" : "acfd0e77a9f668cbe8d9f56939e9fb187952f99d",
+        "version" : "4.4.0"
+      }
+    },
+    {
       "identity" : "fluent-postgres-driver",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/fluent-postgres-driver.git",
       "state" : {
         "revision" : "a538fc647f82d915eb84e0a12ca9b08c513e57c4",
         "version" : "2.8.0"
+      }
+    },
+    {
+      "identity" : "fluent-sqlite-driver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/fluent-sqlite-driver.git",
+      "state" : {
+        "revision" : "d76674f9ec744c773c4126384abe6e74bea68bab",
+        "version" : "4.6.0"
       }
     },
     {
@@ -73,12 +118,39 @@
       }
     },
     {
+      "identity" : "mongokitten",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/orlandos-nl/MongoKitten.git",
+      "state" : {
+        "revision" : "a29b84eb12f05cec9ee26f78770dcec7e63a6771",
+        "version" : "6.7.14"
+      }
+    },
+    {
       "identity" : "multipart-kit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/multipart-kit.git",
       "state" : {
         "revision" : "12ee56f25bd3fc4c2d09c2aa16e69de61dc786e8",
         "version" : "4.6.0"
+      }
+    },
+    {
+      "identity" : "mysql-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/mysql-kit.git",
+      "state" : {
+        "revision" : "a9375f89057e6b2f86878b33312a33f9ba039819",
+        "version" : "4.7.2"
+      }
+    },
+    {
+      "identity" : "mysql-nio",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/mysql-nio.git",
+      "state" : {
+        "revision" : "605fe1d67cc87a52fe248799c9744f3edd976b92",
+        "version" : "1.7.1"
       }
     },
     {
@@ -115,6 +187,24 @@
       "state" : {
         "revision" : "b2f128cb62a3abfbb1e3b2893ff3ee69e70f4f0f",
         "version" : "3.28.0"
+      }
+    },
+    {
+      "identity" : "sqlite-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/sqlite-kit.git",
+      "state" : {
+        "revision" : "e9fd69b54b04acf9ea94d3ba174195d20a07370f",
+        "version" : "4.4.2"
+      }
+    },
+    {
+      "identity" : "sqlite-nio",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/sqlite-nio.git",
+      "state" : {
+        "revision" : "f3164216b0161f63e609e75f9a28a6f542dd9123",
+        "version" : "1.8.6"
       }
     },
     {
