@@ -13,9 +13,9 @@ import FluentMongoDriver
 ///
 /// 数据库服务需要使用Docker创建：
 /// ```bash
-///  docker run --name mongo          \
-///  -e MONOGO_INITDB_DATABASE=vapor  \
-///  -p 27017:27017 -d mongo
+/// docker run --name mongo          \
+/// -e MONOGO_INITDB_DATABASE=vapor  \
+/// -p 27017:27017 -d mongo
 /// ```
 /// 使用 `docker ps`来查看运行中的容器
 /// 使用 `docker rm -f mongo`强制停止并删除运行中的docker容器mongo

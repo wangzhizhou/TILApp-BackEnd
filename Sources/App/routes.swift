@@ -88,6 +88,30 @@ func routes(_ app: Application) throws {
         
         return .noContent
     }
+    
+    app.get("api", "acronyms", "search") { req async throws -> [Acronym] in
+        guard let searchTerm = req.query[String.self, at: "term"]
+        else {
+            throw Abort(.notFound)
+        }
+        return try await Acronym.query(on: req.db)
+            .group(.or) { or in
+                or.filter(\.$short == searchTerm)
+                or.filter(\.$long == searchTerm)
+            }.all()
+    }
+    
+    app.get("api", "acronyms", "first") { req async throws -> Acronym in
+        guard let first = try await Acronym.query(on: req.db).first()
+        else {
+            throw Abort(.notFound)
+        }
+        return first
+    }
+    
+    app.get("api", "acronyms", "sorted") { req async throws -> [Acronym] in
+        try await Acronym.query(on: req.db).sort(\.$short, .ascending).all()
+    }
 
     // 注册路由集合，方便模块化维护
     try app.register(collection: TodoController())

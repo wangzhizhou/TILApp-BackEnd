@@ -13,12 +13,12 @@ import FluentMySQLDriver
 ///
 /// 数据库服务需要使用Docker创建：
 /// ```bash
-///  docker run --name mysql           \
-///  -e MYSQL_USER=vapor_username      \
-///  -e MYSQL_PASSWORD=vapor_password  \
-///  -e MYSQL_DATABASE=vapor_database  \
-///  -e MYSQL_RANDOM_ROOT_PASSWORD=yes \
-///  -p 3306:3306 -d mysql
+/// docker run --name mysql           \
+/// -e MYSQL_USER=vapor_username      \
+/// -e MYSQL_PASSWORD=vapor_password  \
+/// -e MYSQL_DATABASE=vapor_database  \
+/// -e MYSQL_RANDOM_ROOT_PASSWORD=yes \
+/// -p 3306:3306 -d mysql
 /// ```
 /// 使用 `docker ps`来查看运行中的容器
 /// 使用 `docker rm -f mysql`强制停止并删除运行中的docker容器mysql
