@@ -11,6 +11,7 @@ func routes(_ app: Application) throws {
     try app.register(collection: AcronymsController())
     try app.register(collection: WebController())
     try app.register(collection: UserController())
+    try app.register(collection: CategoryController())
 }
 
 func scatteredRoutes(_ app: Application) throws {
