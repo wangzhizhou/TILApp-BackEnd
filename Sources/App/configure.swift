@@ -21,6 +21,7 @@ public func configure(_ app: Application) async throws {
     // 关联数据模型和数据库表
     app.migrations.add(CreateTodo())
     app.migrations.add(CreateAcronym())
+    app.migrations.add(CreateUser())
     
     // 触发数据库表创建
     try await app.autoMigrate()

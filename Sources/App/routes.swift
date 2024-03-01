@@ -10,6 +10,7 @@ func routes(_ app: Application) throws {
     try app.register(collection: TodoController())
     try app.register(collection: AcronymsController())
     try app.register(collection: WebController())
+    try app.register(collection: UserController())
 }
 
 func scatteredRoutes(_ app: Application) throws {
