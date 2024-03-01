@@ -16,6 +16,7 @@ struct CreateAcronym: AsyncMigration {
             .id()
             .field("short", .string, .required)
             .field("long", .string, .required)
+            .field("userID", .uuid, .required)
             .create()
     }
     

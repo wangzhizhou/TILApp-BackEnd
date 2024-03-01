@@ -18,6 +18,8 @@ struct UserController: RouteCollection {
         userRoutes.get(use: getAllHandler)
         
         userRoutes.get(":userID", use: getHandler)
+        
+        userRoutes.get(":userID", "acronyms", use: getAcronymsHandler)
     }
     
     func createHandler(_ req: Request) async throws -> User {
@@ -43,6 +45,17 @@ struct UserController: RouteCollection {
         }
         
         return user
+        
+    }
+    
+    func getAcronymsHandler(_ req: Request) async throws -> [Acronym] {
+        
+        guard let user = try await User.find(req.parameters.get("userID"), on: req.db)
+        else {
+            throw Abort(.notFound)
+        }
+        
+        return try await user.$acronyms.get(on: req.db)
         
     }
 }

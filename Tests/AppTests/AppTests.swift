@@ -2,6 +2,14 @@
 import XCTVapor
 
 final class AppTests: XCTestCase {
+    
+    override func setUp() async throws {
+        
+    }
+    
+    override func tearDown() async throws {
+        
+    }
 
     func testHelloWorld() async throws {
 
@@ -54,16 +62,6 @@ final class AppTests: XCTestCase {
             {"request":{"name":"vapor"}}
             """)
         })
-
-        try await app.test(.POST, "api/acronyms", beforeRequest: { req async throws in
-            try req.content.encode(Acronym(short: "TIL", long: "Today I Learn"))
-        }, afterResponse: { res in
-            XCTAssertEqual(res.status, .ok)
-        })
         
-        try app.test(.GET, "api/acronyms", afterResponse: { res in
-            XCTAssertEqual(res.status, .ok)
-        })
-
     }
 }

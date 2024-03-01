@@ -18,11 +18,15 @@ final class Acronym: Model {
     @Field(key: "long")
     var long: String
     
+    @Parent(key: "userID")
+    var user: User
+    
     // 初始化数据模型
-    init(id: UUID? = nil, short: String, long: String) {
+    init(id: UUID? = nil, short: String, long: String, userID: User.IDValue) {
         self.id = id
         self.short = short
         self.long = long
+        self.$user.id = userID
     }
     
     // 初始化一个空的数据模型，Fluent内部使用
