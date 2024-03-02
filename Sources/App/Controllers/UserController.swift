@@ -55,7 +55,9 @@ struct UserController: RouteCollection {
             throw Abort(.notFound)
         }
         
-        return try await user.$acronyms.get(on: req.db)
+        let acronyms = try await user.$acronyms.get(on: req.db)
+        
+        return acronyms
         
     }
 }

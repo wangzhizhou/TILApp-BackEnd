@@ -3,19 +3,19 @@ import XCTVapor
 
 final class AppTests: XCTestCase {
     
+    var app: Application!
+    
     override func setUp() async throws {
         
+        app = try await .testable()
     }
     
     override func tearDown() async throws {
         
+        app.shutdown()
     }
 
     func testHelloWorld() async throws {
-
-        let app = Application(.testing)
-        defer { app.shutdown() }
-        try await configure(app)
 
         try app.test(.GET, "", afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
@@ -45,7 +45,7 @@ final class AppTests: XCTestCase {
             XCTAssertEqual(res.body.string, "Hello, joker!")
         })
 
-        try await app.test(.POST, "info", beforeRequest: { req async throws in
+        try app.test(.POST, "info", beforeRequest: { req in
             let body = InfoData(name: "vapor")
             try req.content.encode(body)
         }, afterResponse: { res in
@@ -53,7 +53,7 @@ final class AppTests: XCTestCase {
             XCTAssertEqual(res.body.string, "Hello, vapor!")
         })
 
-        try await app.test(.POST, "info/json", beforeRequest: { req async throws in
+        try app.test(.POST, "info/json", beforeRequest: { req in
             let body = InfoData(name: "vapor")
             try req.content.encode(body)
         }, afterResponse: { res in
