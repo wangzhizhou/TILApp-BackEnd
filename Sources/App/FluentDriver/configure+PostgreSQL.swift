@@ -20,7 +20,7 @@ import FluentPostgresDriver
 /// -e POSTGRES_PASSWORD=vapor_password \
 /// -p 5433:5432 -d postgres
 /// ```
-/// 
+///
 /// 正式环境：
 /// ```bash
 /// docker run --name psql              \
