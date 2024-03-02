@@ -19,6 +19,8 @@ struct CategoryController: RouteCollection {
         
         categoryRoutes.get(":categoryID", use: getHandler)
         
+        categoryRoutes.get(":categoryID", "acronyms", use: getAcronymsHandler)
+        
     }
 }
 
@@ -46,5 +48,15 @@ extension CategoryController {
             throw Abort(.notFound)
         }
         return category
+    }
+    
+    func getAcronymsHandler(_ req: Request) async throws -> [Acronym] {
+        
+        guard let category = try await Category.find(req.parameters.get("categoryID"), on: req.db)
+        else {
+            throw Abort(.notFound)
+        }
+        
+        return try await category.$acronyms.get(on: req.db)
     }
 }
