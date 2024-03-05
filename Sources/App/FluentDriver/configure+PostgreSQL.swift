@@ -14,7 +14,7 @@ import FluentPostgresDriver
 /// 数据库服务需要使用Docker创建：
 /// 测试环境：
 /// ```bash
-/// docker run --name test-psql         \
+/// docker run --name psql-test         \
 /// -e POSTGRES_DB=vapor_test           \
 /// -e POSTGRES_USER=vapor_username     \
 /// -e POSTGRES_PASSWORD=vapor_password \
