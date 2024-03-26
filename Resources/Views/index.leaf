@@ -2,27 +2,6 @@
     #export("content"):
       <img src="/images/logo.png" class="mx-auto d-block" alt="TIL Logo" />
       <h1>Acronyms</h1>
-      #if(acronyms):
-      <table class="table table-bordered table-hover">
-        <thead class="table-light">
-            <tr>
-                <th>Short</th>
-                <th>Long</th>
-            </tr
-        </thead>
-        <tbody>
-            #for(acronym in acronyms):
-            <tr>
-                <td>
-                    <a href="/acronyms/#(acronym.id)">
-                        #(acronym.short)
-                    </a>
-                </td>
-                <td>#(acronym.long)</td>
-            </tr>
-            #endfor
-        </tbody>
-      </table>
-      #endif
+      #extend("acronymTable")
     #endexport
 #endextend

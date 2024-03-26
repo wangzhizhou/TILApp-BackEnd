@@ -1,0 +1,27 @@
+#extend("base"):
+    #export("content"):
+        <h1>All Users</h1>
+        #if(users):
+        <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Username</th>
+            </tr
+        </thead>
+        <tbody>
+            #for(user in users):
+            <tr>
+                <td>
+                    <a href="/users/#(user.id)">
+                        #(user.name)
+                    </a>
+                </td>
+                <td>#(user.username)</td>
+            </tr>
+            #endfor
+        </tbody>
+        </table>
+        #endif
+    #endexport
+#endextend
