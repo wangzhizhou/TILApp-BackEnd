@@ -1,0 +1,24 @@
+#extend("base"):
+    #export("content"):
+        <h1>#(title)</h1>
+            <form method="post">
+              <div class="mb-3">
+                <label for="short" class="form-label">Acronym</label>
+                <input type="text" class="form-control" id="short" name="short">
+              </div>
+              <div class="mb-3">
+                <label for="long" class="form-label">Meaning</label>
+                <input type="text" class="form-control" id="long" name="long">
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="userID">User</label>
+                <select class="form-control" id="userID" name="userID">
+                    #for(user in users):
+                        <option value="#(user.id)">#(user.name)</option>
+                    #endfor
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+    #endexport
+#endextend
