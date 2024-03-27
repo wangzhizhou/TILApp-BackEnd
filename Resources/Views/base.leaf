@@ -22,6 +22,9 @@
           <li class="nav-item">
             <a class="nav-link #if(title == "All Users"): active #endif" aria-current="page" href="/users">All Users</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link #if(title == "All Categories"): active #endif" aria-current="page" href="/categories">All Categories</a>
+          </li>
         </ul>
       </div>
     </div>

@@ -1,0 +1,6 @@
+#extend("base"):
+#export("content"):
+<h1>#(category.name)</h1>
+#extend("acronymTable")
+#endexport
+#endextend
