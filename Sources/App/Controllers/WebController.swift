@@ -21,6 +21,10 @@ struct WebController: RouteCollection {
 
         routes.get("acronyms", "create", use: createAcronymHandler)
         routes.post("acronyms", "create", use: createAcronymPostHandler)
+
+        routes.get("acronyms", ":acronymID", "edit", use: editAcronymHandler)
+        routes.post("acronyms", ":acronymID", "edit", use: editAcronymPostHandler)
+        routes.post("acronyms", ":acronymID", "delete", use: deleteAcronymHandler)
     }
 
     func indexHandler(_ req: Request) async throws -> View {
@@ -98,6 +102,42 @@ struct WebController: RouteCollection {
         }
         return req.redirect(to: "/acronyms/\(acronymID)")
     }
+
+    func editAcronymHandler(_ req: Request) async throws -> View {
+        guard let acronym = try await Acronym.find(req.parameters.get("acronymID"), on: req.db)
+        else {
+            throw Abort(.notFound)
+        }
+        let allUsers = try await User.query(on: req.db).all()
+        let context = EditAcronymContext(acronym: acronym, users: allUsers)
+        return try await req.view.render("createAcronym", context)
+    }
+
+    func editAcronymPostHandler(_ req: Request) async throws -> Response {
+        let acronymData = try req.content.decode(CreateAcronymData.self)
+        guard let acronym = try await Acronym.find(req.parameters.get("acronymID"), on: req.db)
+        else{
+            throw Abort(.notFound)
+        }
+        acronym.short = acronymData.short
+        acronym.long = acronymData.long
+        acronym.$user.id = acronymData.userID
+        try await acronym.save(on: req.db)
+        guard let acronymID = acronym.id
+        else {
+            throw Abort(.internalServerError)
+        }
+        return req.redirect(to: "/acronyms/\(acronymID)")
+    }
+
+    func deleteAcronymHandler(_ req: Request) async throws -> Response {
+        guard let acronym = try await Acronym.find(req.parameters.get("acronymID"), on: req.db)
+        else {
+            throw Abort(.notFound)
+        }
+        try await acronym.delete(on: req.db)
+        return req.redirect(to: "/")
+    }
 }
 
 struct IndexContext: Encodable {
@@ -136,4 +176,11 @@ struct CategoryContext: Encodable {
 struct CreateAcronymContext: Encodable {
     let title = "Create An Acronym"
     let users: [User]
+}
+
+struct EditAcronymContext: Encodable {
+    let title = "Edit Acronym"
+    let acronym: Acronym
+    let users: [User]
+    let editing = true
 }

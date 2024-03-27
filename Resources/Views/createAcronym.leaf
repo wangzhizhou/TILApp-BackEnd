@@ -4,21 +4,21 @@
             <form method="post">
               <div class="mb-3">
                 <label for="short" class="form-label">Acronym</label>
-                <input type="text" class="form-control" id="short" name="short">
+                <input type="text" class="form-control" id="short" name="short" #if(editing): value="#(acronym.short)" #endif>
               </div>
               <div class="mb-3">
                 <label for="long" class="form-label">Meaning</label>
-                <input type="text" class="form-control" id="long" name="long">
+                <input type="text" class="form-control" id="long" name="long" #if(editing): value="#(acronym.long)" #endif>
               </div>
               <div class="mb-3">
                 <label class="form-label" for="userID">User</label>
                 <select class="form-select" id="userID" name="userID">
                     #for(user in users):
-                        <option value="#(user.id)">#(user.name)</option>
+                        <option value="#(user.id)" #if(editing): #if(user.id == acronym.user.id): selected #endif #endif>#(user.name)</option>
                     #endfor
                 </select>
               </div>
-              <button type="submit" class="btn btn-primary mt-3">Submit</button>
+              <button type="submit" class="btn btn-primary mt-3">#if(editing): Update #else: Submit #endif</button>
             </form>
     #endexport
 #endextend
