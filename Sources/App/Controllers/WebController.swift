@@ -42,7 +42,13 @@ struct WebController: RouteCollection {
             throw Abort(.notFound)
         }
         let user = try await acronym.$user.get(on: req.db)
-        let context = AcronymContext(title: acronym.short, acronym: acronym, user: user)
+        let categories = try await acronym.$categories.get(on: req.db)
+        let context = AcronymContext(
+            title: acronym.short,
+            acronym: acronym,
+            user: user,
+            categories: categories
+        )
         return try await req.view.render("acronym", context)
     }
 
@@ -89,7 +95,7 @@ struct WebController: RouteCollection {
     }
 
     func createAcronymPostHandler(_ req: Request) async throws -> Response {
-        let acronymData = try req.content.decode(CreateAcronymData.self)
+        let acronymData = try req.content.decode(CreateAcronymFormData.self)
         let acronym = Acronym(
             short: acronymData.short,
             long: acronymData.long,
@@ -100,6 +106,9 @@ struct WebController: RouteCollection {
         else {
             throw Abort(.internalServerError)
         }
+        for category in acronymData.categories ?? [] {
+            try await Category.addCategory(category, to: acronym, on: req)
+        }
         return req.redirect(to: "/acronyms/\(acronymID)")
     }
 
@@ -109,12 +118,13 @@ struct WebController: RouteCollection {
             throw Abort(.notFound)
         }
         let allUsers = try await User.query(on: req.db).all()
-        let context = EditAcronymContext(acronym: acronym, users: allUsers)
+        let categories = try await acronym.$categories.get(on: req.db)
+        let context = EditAcronymContext(acronym: acronym, users: allUsers, categories: categories)
         return try await req.view.render("createAcronym", context)
     }
 
     func editAcronymPostHandler(_ req: Request) async throws -> Response {
-        let acronymData = try req.content.decode(CreateAcronymData.self)
+        let acronymData = try req.content.decode(CreateAcronymFormData.self)
         guard let acronym = try await Acronym.find(req.parameters.get("acronymID"), on: req.db)
         else{
             throw Abort(.notFound)
@@ -126,6 +136,20 @@ struct WebController: RouteCollection {
         guard let acronymID = acronym.id
         else {
             throw Abort(.internalServerError)
+        }
+        let categories = try await acronym.$categories.get(on: req.db)
+
+        let existCategories = Set<String>(categories.map { $0.name })
+        let updateCategories = Set<String>(acronymData.categories ?? [])
+        let categoriesToAdd = updateCategories.subtracting(existCategories)
+        let categoriesToRemove = existCategories.subtracting(updateCategories)
+        for categoryToAdd in categoriesToAdd {
+            try await Category.addCategory(categoryToAdd, to: acronym, on: req)
+        }
+        for categoryToRemove in categoriesToRemove {
+            if let existCategory = categories.first(where: { $0.name == categoryToRemove}) {
+                try await acronym.$categories.detach(existCategory, on: req.db)
+            }
         }
         return req.redirect(to: "/acronyms/\(acronymID)")
     }
@@ -149,6 +173,7 @@ struct AcronymContext: Encodable {
     let title: String
     let acronym: Acronym
     let user: User
+    let categories: [Category]
 }
 
 struct UserContext: Encodable {
@@ -183,4 +208,12 @@ struct EditAcronymContext: Encodable {
     let acronym: Acronym
     let users: [User]
     let editing = true
+    let categories: [Category]
+}
+
+struct CreateAcronymFormData: Content {
+    let userID: UUID
+    let short: String
+    let long: String
+    let categories: [String]?
 }

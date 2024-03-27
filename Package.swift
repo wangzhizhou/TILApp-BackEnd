@@ -17,6 +17,9 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.8.0"),
         .package(url: "https://github.com/vapor/fluent-mongo-driver.git", from: "1.3.1"),
         // 🍃 An expressive, performant, and extensible templating language built for Swift.
+        // [Bootstrap](https://getbootstrap.com/)
+        // [Select2 JS Lib](https://select2.org/)
+        // [jQuery](https://github.com/jquery/jquery)
         .package(url: "https://github.com/vapor/leaf.git", from: "4.2.4"),
     ],
     targets: [

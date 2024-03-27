@@ -31,3 +31,16 @@ final class Category: Model {
 
 import Vapor
 extension Category: Content {}
+
+
+extension Category {
+    static func addCategory(_ name: String, to acronym: Acronym, on req: Request) async throws {
+        if let existCategory = try await Category.query(on: req.db).filter(\.$name == name).first() {
+            try await acronym.$categories.attach(existCategory, on: req.db)
+        } else {
+            let category = Category(name: name)
+            try await category.save(on: req.db)
+            try await acronym.$categories.attach(category, on: req.db)
+        }
+    }
+}
