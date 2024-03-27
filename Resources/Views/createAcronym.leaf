@@ -12,13 +12,13 @@
               </div>
               <div class="mb-3">
                 <label class="form-label" for="userID">User</label>
-                <select class="form-control" id="userID" name="userID">
+                <select class="form-select" id="userID" name="userID">
                     #for(user in users):
                         <option value="#(user.id)">#(user.name)</option>
                     #endfor
                 </select>
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary mt-3">Submit</button>
             </form>
     #endexport
 #endextend
