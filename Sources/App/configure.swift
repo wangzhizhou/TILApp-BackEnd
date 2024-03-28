@@ -9,7 +9,10 @@ public func configure(_ app: Application) async throws {
     
     // 设置日志级别
     app.logger.logLevel = .debug
-    
+    if app.environment == .production {
+        app.logger.logLevel = .info
+    }
+
     // 配置使用的数据库连接参数
     try configurePostgreSQL(app)
     // configureSQLite(app, configuration: .memory)
