@@ -21,6 +21,9 @@ let package = Package(
         // [Select2 JS Lib](https://select2.org/)
         // [jQuery](https://github.com/jquery/jquery)
         .package(url: "https://github.com/vapor/leaf.git", from: "4.2.4"),
+        // [HTMLKit](https://github.com/vapor-community/HTMLKit)
+        // Create and render HTML templates with
+        .package(url: "https://github.com/vapor-community/htmlkit.git", from: "3.0.0-alpha.8")
     ],
     targets: [
         .executableTarget(
@@ -32,6 +35,7 @@ let package = Package(
                 .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
                 .product(name: "FluentMongoDriver", package: "fluent-mongo-driver"),
                 .product(name: "Leaf", package: "leaf"),
+                .product(name: "HTMLKit", package: "htmlkit"),
                 .product(name: "Vapor", package: "vapor"),
             ],
             swiftSettings: [

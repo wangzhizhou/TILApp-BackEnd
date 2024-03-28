@@ -100,6 +100,15 @@
       }
     },
     {
+      "identity" : "htmlkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor-community/htmlkit.git",
+      "state" : {
+        "revision" : "57ec6135253289bcc6773d8edc0a9bdefd81c508",
+        "version" : "3.0.0-alpha.8"
+      }
+    },
+    {
       "identity" : "leaf",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/leaf.git",

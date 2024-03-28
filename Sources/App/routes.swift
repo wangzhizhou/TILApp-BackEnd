@@ -1,5 +1,6 @@
 import Fluent
 import Vapor
+import HTMLKitVapor
 
 func routes(_ app: Application) throws {
     
@@ -43,6 +44,10 @@ func scatteredRoutes(_ app: Application) throws {
         
         return InfoResponse(request: data)
         
+    }
+
+    app.get("htmlkit") { req async throws -> View in
+        return try await req.htmlkit.render(ExampleView(context: InfoData(name: "htmlKit views")))
     }
 }
 
